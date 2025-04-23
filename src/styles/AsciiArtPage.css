@@ -1,0 +1,59 @@
+.ascii-art-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #000;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  padding: 20px;
+}
+
+.ascii-art {
+  font-size: 8px;
+  line-height: 1;
+  text-align: center;
+  white-space: pre;
+  margin: 0;
+  color: white;
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .ascii-art {
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ascii-art {
+    font-size: 12px;
+  }
+}
+
+.navigation-links {
+  display: flex;
+  gap: 20px;
+  margin-top: 40px;
+  justify-content: center;
+}
+
+.navigation-links a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid white;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.navigation-links a:hover {
+  background-color: white;
+  color: #000;
+  transform: translateY(-2px);
+}
+
+.navigation-links a:active {
+  transform: translateY(0);
+}
