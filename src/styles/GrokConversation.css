@@ -7,7 +7,7 @@ body {
 }
 
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -99,8 +99,13 @@ pre {
 
 .message-content {
   position: relative;
-  line-height: 1.4;
+  line-height: 1.2;
   white-space: pre-wrap;
+  font-size: 16px;
+}
+
+.gray-text {
+  color: #cecece;
 }
 
 .cursor {

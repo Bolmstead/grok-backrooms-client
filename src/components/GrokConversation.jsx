@@ -1,20 +1,44 @@
 import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
+import { useParams, Link } from "react-router-dom";
 import "../styles/GrokConversation.css";
-
+import { LIVE_BACKROOMS_URL } from "../constants";
+import grokAscii from "../assets/grok-ascii.svg";
 // Typewriter component for animated text display
-const TypewriterMessage = ({ message, isLatest, conversationRef }) => {
+const TypewriterMessage = ({
+  message,
+  messageId,
+  isLatest,
+  conversationRef,
+  scenario,
+  messageCreatedBy,
+  timestamp,
+}) => {
+  console.log(
+    "🚀 ~ TypewriterMessage ~ message, isLatest, conversationRef:",
+    message,
+    isLatest,
+    conversationRef
+  );
   const [displayedText, setDisplayedText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
   const [isTyping, setIsTyping] = useState(true);
-  const contentRef = useRef(message.content);
+  const contentRef = useRef(message);
   const hasTypedRef = useRef(false);
+  const timestampText = new Date(timestamp).toLocaleTimeString();
 
+  const aiNameText =
+    messageCreatedBy === "ai1"
+      ? `<${scenario.ai1Name}>`
+      : `<${scenario.ai2Name}>`;
+  message = `${aiNameText} - ${messageId} - ${timestampText}
+  
+  ${message}`;
   // Store the complete message in a ref to avoid issues
   useEffect(() => {
-    contentRef.current = message.content;
-  }, [message.content]);
+    contentRef.current = message;
+  }, [message]);
 
   // Scroll to bottom when text updates during typing
   useEffect(() => {
@@ -56,10 +80,10 @@ const TypewriterMessage = ({ message, isLatest, conversationRef }) => {
         setIsTyping(false);
         hasTypedRef.current = true; // Mark this message as fully typed
       }
-    }, 30); // Adjust typing speed here
+    }, 10); // Adjust typing speed here
 
     return () => clearInterval(typingInterval);
-  }, [message.timestamp, isLatest, conversationRef]);
+  }, [timestamp, isLatest, conversationRef]);
 
   // Blinking cursor effect
   useEffect(() => {
@@ -76,14 +100,15 @@ const TypewriterMessage = ({ message, isLatest, conversationRef }) => {
     return () => clearInterval(cursorInterval);
   }, [isLatest]);
 
-  const timestamp = new Date(message.timestamp).toLocaleTimeString();
-
   return (
-    <div className={`message ${message.sender}`}>
-      <div className="timestamp">
-        {message.sender.toUpperCase()} | {timestamp}
-      </div>
-      <div className="message-content">
+    <div className={`message ${messageCreatedBy}`}>
+      <div
+        className={
+          messageCreatedBy === "ai1"
+            ? "message-content gray-text"
+            : "message-content"
+        }
+      >
         {displayedText}
         {isLatest && (isTyping || showCursor) && (
           <span className="cursor">█</span>
@@ -94,16 +119,18 @@ const TypewriterMessage = ({ message, isLatest, conversationRef }) => {
 };
 
 function GrokConversation() {
+  const { id } = useParams();
   const [socket, setSocket] = useState(null);
   const [status, setStatus] = useState("");
   const [conversation, setConversation] = useState([]);
   const conversationRef = useRef(null);
   const processedMessagesRef = useRef(new Set());
+  const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
     // Initialize socket connection
     console.log("Initializing socket connection");
-    const socketInstance = io("http://localhost:3000");
+    const socketInstance = io(LIVE_BACKROOMS_URL);
     console.log("Socket instance created:", socketInstance);
     setSocket(socketInstance);
 
@@ -120,26 +147,18 @@ function GrokConversation() {
 
     socketInstance.on("newMessage", (data) => {
       console.log("New message received:", data);
+      if (isHidden) {
+        return;
+      }
 
-      // Use a unique identifier for the message (timestamp or an id if available)
-      const messageId = data.message.timestamp || Date.now();
+      setConversation((prevConversation) => [...prevConversation, data]);
 
-      // Check if we've already processed this message
-      if (!processedMessagesRef.current.has(messageId)) {
-        processedMessagesRef.current.add(messageId);
-
-        setConversation((prevConversation) => [
-          ...prevConversation,
-          data.message,
-        ]);
-
-        // Scroll to bottom when new message arrives
-        if (conversationRef.current) {
-          setTimeout(() => {
-            conversationRef.current.scrollTop =
-              conversationRef.current.scrollHeight;
-          }, 100);
-        }
+      // Scroll to bottom when new message arrives
+      if (conversationRef.current) {
+        setTimeout(() => {
+          conversationRef.current.scrollTop =
+            conversationRef.current.scrollHeight;
+        }, 100);
       }
     });
 
@@ -148,59 +167,74 @@ function GrokConversation() {
       setStatus(`Error: ${data.error}`);
     });
 
+    // Handle visibility change
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Tab is hidden, reset messages
+        setConversation([]);
+        setIsHidden(true);
+      } else {
+        setIsHidden(false);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     // Clean up on unmount
     return () => {
       socketInstance.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []); // Remove conversation from dependencies
-
-  const startConversation = async () => {
-    try {
-      setStatus("Starting conversation...");
-      setConversation([]); // Clear previous conversation
-      const response = await axios.post(
-        "http://localhost:3000/api/conversations/start"
-      );
-      console.log("🚀 ~ startConversation ~ response:", response);
-    } catch (error) {
-      console.error("Error starting conversation:", error);
-      setStatus(`Error: ${error.message}`);
-    }
-  };
 
   return (
     <div className="container">
       <div className="header">
-        <h1>THE INFINITE GROKROOMS</h1>
+        <h1>
+          <img
+            src={grokAscii}
+            alt="The Grok Backrooms"
+            style={{ width: "100%", maxWidth: "1200px" }}
+          />
+        </h1>
       </div>
 
-      <div className="status" style={{ fontSize: "20px", fontWeight: "bold" }}>
-        the mad dreams of an electric Grok mind
+      <div className="status" style={{ fontSize: "14px", fontWeight: "bold" }}>
+        the mad dreams of an unhinged Grok mind
       </div>
       <div className="status" style={{ fontSize: "14px" }}>
         this is a live conversation between two instances of grok-2-1212. it is
         automatically and infinitely generated, exploring its curiosity using
-        the metaphor of a command line interface (CLI) and several AI Agents to
-        check current events, crypto markets, create their own memecoins, and
-        more.
+        the metaphor of a command line interface (CLI). no human intervention is
+        present. experiment by @BTC_Broccoli
         <br /> <br />
-        no human intervention is present. experiment by @BTC_Broccoli
+        these Groks have been given the power to discuss current events, create
+        memecoins, and more...
       </div>
 
       <div className="conversation" ref={conversationRef}>
-        {conversation.map((message, index) => (
-          <TypewriterMessage
-            key={message.timestamp}
-            message={message}
-            isLatest={index === conversation.length - 1}
-            conversationRef={conversationRef}
-          />
-        ))}
+        {conversation.map((message, index) => {
+          console.log("Rendering message:", message, "at index:", index);
+          return (
+            <TypewriterMessage
+              key={message.timestamp}
+              message={message.content}
+              messageId={message._id}
+              scenario={message.scenario}
+              messageCreatedBy={message.messageCreatedBy}
+              isLatest={index === conversation.length - 1}
+              conversationRef={conversationRef}
+              timestamp={message.timestamp}
+            />
+          );
+        })}
       </div>
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
       >
-        <button onClick={() => startConversation()}>Start Conversation</button>
+        <Link to="/archive" style={{ marginRight: "10px", marginLeft: "10px" }}>
+          query the backrooms
+        </Link>
       </div>
     </div>
   );
