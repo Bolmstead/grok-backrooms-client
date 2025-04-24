@@ -412,7 +412,7 @@ function SearchPage() {
               key={conversation._id}
               className="conversation-link"
             >
-              <div className="conversation-item">
+              <div className="conversation-item" style={{ padding: "10px" }}>
                 <h3>
                   {loadedScenario.scenarioId}_{conversation.idRange}
                 </h3>

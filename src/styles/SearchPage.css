@@ -142,6 +142,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .search-button:hover {
   background-color: #33ff33;
   color: #000;
+  box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
 }
 
 .search-button.active {
@@ -164,12 +165,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .scenario-button:hover {
   background-color: #222;
   border-color: #44ff44;
+  box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
 }
 
 .scenario-button.active {
   background-color: #33ff33;
   color: #000;
   border-color: #33ff33;
+  box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
 }
 
 /* Modal Styles */
@@ -273,6 +276,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .highlighted-term {
   background-color: #33ff33;
+  box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
+
   color: black;
   font-weight: bold;
   padding: 0 2px;
@@ -319,9 +324,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .modal-button.cancel:hover {
   border-color: #ff3333;
   color: #ff3333;
+  box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
 }
 
 .modal-button.search:hover {
   background-color: #33ff33;
   color: #000;
+  box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
 }
