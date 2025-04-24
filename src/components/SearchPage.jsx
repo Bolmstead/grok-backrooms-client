@@ -17,10 +17,14 @@ function SearchPage() {
   const [isLastPage, setIsLastPage] = useState(true);
   const [searchResults, setSearchResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchedTerm, setSearchedTerm] = useState("");
   const [selectedScenario, setSelectedScenario] = useState("Chapter 1");
   const [loadedScenario, setLoadedScenario] = useState(null);
   const [conversations, setConversations] = useState([]);
-
+  const [showModal, setShowModal] = useState(false);
+  const [modalSearchResults, setModalSearchResults] = useState([]);
+  const [modalPage, setModalPage] = useState(1);
+  const [modalLoading, setModalLoading] = useState(false);
   const groupMessagesIntoConversations = (messages) => {
     const groupedConversations = [];
     const messagesPerGroup = 10;
@@ -104,11 +108,93 @@ function SearchPage() {
     };
 
     fetchConversations();
-  }, [page]);
+  }, [page, selectedScenario]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     setPage(1); // Reset to first page on new search
+  };
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
+  const handleSubmitSearch = async () => {
+    // Perform the search
+    setShowModal(true);
+    setModalPage(1);
+    setModalLoading(true);
+    setSearchedTerm(searchTerm);
+    try {
+      const response = await axios.post(
+        `${BACKROOMS_DATABASE_URL}/conversations/search`,
+        {
+          page: modalPage,
+          searchTerm: searchTerm,
+        }
+      );
+      console.log("🚀 ~ fetchConversations ~ response:", response);
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch conversations");
+        setModalLoading(false);
+      } else {
+        console.log("searchedTerm:: ", searchTerm);
+
+        // Process the results to get context around the search term
+        const processedResults = response.data.map((message) => {
+          const originalContent = message.content;
+          const searchTermLower = searchTerm.toLowerCase();
+          const contentLower = originalContent.toLowerCase();
+
+          // Find the first occurrence of the search term
+          const indexOfMatch = contentLower.indexOf(searchTermLower);
+
+          if (indexOfMatch === -1) {
+            // If somehow no match found (shouldn't happen), return full content
+            return {
+              ...message,
+              originalContent,
+              snippetContent: originalContent,
+              searchTerm: searchTerm,
+            };
+          }
+
+          // Calculate start and end positions for the snippet
+          const snippetStart = Math.max(0, indexOfMatch - 100);
+          const snippetEnd = Math.min(
+            originalContent.length,
+            indexOfMatch + searchTerm.length + 100
+          );
+
+          // Extract the snippet
+          let snippetContent = originalContent.substring(
+            snippetStart,
+            snippetEnd
+          );
+
+          // Add ellipses if we're not showing from the beginning or to the end
+          if (snippetStart > 0) {
+            snippetContent = "..." + snippetContent;
+          }
+          if (snippetEnd < originalContent.length) {
+            snippetContent = snippetContent + "...";
+          }
+
+          return {
+            ...message,
+            originalContent,
+            snippetContent,
+            searchTerm: searchTerm,
+          };
+        });
+
+        setModalSearchResults(processedResults);
+        setModalLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+      setModalLoading(false);
+    }
   };
 
   const handleLoadMore = async () => {
@@ -128,18 +214,20 @@ function SearchPage() {
   };
 
   const filteredConversations = conversations.filter((conv) =>
-    conv.title.toLowerCase().includes(searchTerm.toLowerCase())
+    conv.title.toLowerCase()
   );
 
   return (
     <div className="container">
       <div className="header">
         <h1>
-          <img
-            src={grokAscii}
-            alt="The Grok Backrooms"
-            style={{ width: "100%", maxWidth: "1200px" }}
-          />
+          <Link to="/">
+            <img
+              src={grokAscii}
+              alt="The Grok Backrooms"
+              style={{ width: "100%", maxWidth: "1200px" }}
+            />
+          </Link>
           <img
             src={archive}
             alt="Archive"
@@ -154,9 +242,9 @@ function SearchPage() {
           marginBottom: "20px",
         }}
       >
-        <Link to="/"> live conversation</Link>
+        <Link to="/">{"<"} back to live conversation</Link>
       </div>
-      <div className="search-box">
+      <div className="search-box" style={{ display: "flex", gap: "10px" }}>
         <input
           type="text"
           placeholder="Search conversations..."
@@ -164,7 +252,103 @@ function SearchPage() {
           onChange={handleSearch}
           className="search-input"
         />
+        <button
+          onClick={handleSubmitSearch}
+          disabled={searchTerm.length <= 2}
+          className="search-button"
+        >
+          Search
+        </button>
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Search the Backrooms</h2>
+            <div className="modal-search-box">
+              <input
+                type="text"
+                placeholder="Enter search terms..."
+                value={searchTerm}
+                onChange={handleSearch}
+                className="modal-search-input"
+              />
+            </div>
+            <div className="scenario-selection">
+              <h3>Search Results for "{searchedTerm}":</h3>
+              <div className="search-results-container">
+                {/* Search results would go here */}
+                {modalSearchResults.length > 0 && !modalLoading
+                  ? modalSearchResults.map((message, index) => (
+                      <a
+                        key={message._id}
+                        href={`/conversation/${message._id}`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <div
+                          className={`conversation-item conversation-link ${
+                            index % 2 === 0
+                              ? "conversation-item-ai1"
+                              : "conversation-item-ai2"
+                          }`}
+                        >
+                          <div className="message-header">
+                            <span className="message-content">{`<${
+                              message.messageCreatedBy === "ai1"
+                                ? message.scenario.ai1Name
+                                : message.scenario.ai2Name
+                            }:${message._id}> ${new Date(
+                              message.timestamp
+                            ).toISOString()}`}</span>
+                          </div>
+                          <div className="message-content search-result-content">
+                            {message.snippetContent
+                              .split(
+                                new RegExp(`(${message.searchTerm})`, "gi")
+                              )
+                              .map((part, index) =>
+                                part.toLowerCase() ===
+                                message.searchTerm.toLowerCase() ? (
+                                  <span
+                                    key={index}
+                                    className="highlighted-term"
+                                  >
+                                    {part}
+                                  </span>
+                                ) : (
+                                  <span key={index}>{part}</span>
+                                )
+                              )}
+                          </div>
+                        </div>
+                      </a>
+                    ))
+                  : null}
+                {modalSearchResults.length === 0 && !modalLoading && (
+                  <div className="empty-results">no results found...</div>
+                )}
+                {modalLoading && (
+                  <div className="empty-results">loading...</div>
+                )}
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button className="modal-button cancel" onClick={toggleModal}>
+                Cancel
+              </button>
+              <button
+                className="modal-button search"
+                onClick={handleSubmitSearch}
+                disabled={searchTerm.length <= 2}
+              >
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div
         style={{
           display: "flex",
@@ -218,7 +402,9 @@ function SearchPage() {
 
       <div className="conversations-list">
         {isLoading ? (
-          <div>Loading...</div>
+          <div style={{ textAlign: "center", marginTop: "50px" }}>
+            Loading...
+          </div>
         ) : (
           filteredConversations.map((conversation) => (
             <Link
@@ -234,6 +420,11 @@ function SearchPage() {
               </div>
             </Link>
           ))
+        )}
+        {!isLoading && filteredConversations.length === 0 && (
+          <div style={{ textAlign: "center", marginTop: "50px" }}>
+            <span>No conversations found</span>
+          </div>
         )}
       </div>
 
