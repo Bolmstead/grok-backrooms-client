@@ -50,6 +50,12 @@
   border: 1px dashed white;
 }
 
+.conversation-item {
+  background-color: #111;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
 .conversation-item-ai1 {
   background-color: #111;
   padding: 15px;
@@ -103,6 +109,7 @@
   cursor: pointer;
   font-family: "Courier New", Courier, monospace;
   transition: all 0.3s ease;
+  margin-bottom: 10px;
 }
 
 .pagination-button:hover:not(:disabled) {
@@ -331,4 +338,39 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background-color: #33ff33;
   color: #000;
   box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
+}
+
+.message-content {
+  line-height: 1.5;
+  word-break: break-word;
+  font-size: 16px;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+  .message-content {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .conversation-item,
+  .conversation-item-ai1,
+  .conversation-item-ai2 {
+    padding: 12px;
+  }
+
+  .message-header {
+    font-size: 12px;
+  }
+}
+
+/* Tablet Styles */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .message-content {
+    font-size: 15px;
+  }
+
+  .message-header {
+    font-size: 13px;
+  }
 }

@@ -219,20 +219,38 @@ function SearchPage() {
 
   return (
     <div className="container">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "20px",
+        }}
+      >
+        <Link to="/">{"<"} home</Link>
+      </div>
       <div className="header">
-        <h1>
+        <h1 className="desktop-only">
+          <Link to="/">
+            <img src={grokAscii} alt="The Grok Backrooms" />
+          </Link>
+        </h1>
+        <h1 className="mobile-only">
           <Link to="/">
             <img
-              src={grokAscii}
+              className="image-one"
+              src={"TheGrok.png"}
               alt="The Grok Backrooms"
-              style={{ width: "100%", maxWidth: "1200px" }}
             />
           </Link>
-          <img
-            src={archive}
-            alt="Archive"
-            style={{ width: "100%", maxWidth: "1200px" }}
-          />
+        </h1>
+        <h1 className="mobile-only">
+          <Link to="/">
+            <img
+              className="image-two"
+              src={"Backrooms.png"}
+              alt="The Grok Backrooms"
+            />
+          </Link>
         </h1>
       </div>
       <div
@@ -242,7 +260,16 @@ function SearchPage() {
           marginBottom: "20px",
         }}
       >
-        <Link to="/">{"<"} back to live conversation</Link>
+        ---------- archive ----------
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "20px",
+        }}
+      >
+        search through all 10,000+ Grok conversations or select a scenario below
       </div>
       <div className="search-box" style={{ display: "flex", gap: "10px" }}>
         <input
@@ -279,7 +306,9 @@ function SearchPage() {
               <h3>Search Results for "{searchedTerm}":</h3>
               <div className="search-results-container">
                 {/* Search results would go here */}
-                {modalSearchResults.length > 0 && !modalLoading
+                {modalSearchResults.length > 0 &&
+                !modalLoading &&
+                loadedScenario
                   ? modalSearchResults.map((message, index) => (
                       <a
                         key={message._id}
@@ -300,7 +329,9 @@ function SearchPage() {
                                 : message.scenario.ai2Name
                             }:${message._id}> ${new Date(
                               message.timestamp
-                            ).toISOString()}`}</span>
+                            ).toISOString()} | ${
+                              loadedScenario.scenarioId
+                            }`}</span>
                           </div>
                           <div className="message-content search-result-content">
                             {message.snippetContent
@@ -399,6 +430,35 @@ function SearchPage() {
           Philosophy
         </button>
       </div>
+      {loadedScenario && (
+        <div className={`system-message`} style={{ marginBottom: "20px" }}>
+          <div className="message-header">
+            <span className="message-content">
+              actors: {loadedScenario.ai1Name}, {loadedScenario.ai2Name} <br />
+              models: {loadedScenario.ai1Model}, {loadedScenario.ai2Model}{" "}
+              <br />
+              temperature: {loadedScenario.ai1Temperature},
+              {loadedScenario.ai2Temperature} <br />
+              number of messages: <br />
+              note: <br />
+            </span>
+          </div>
+          {/* <div className="message-content">
+            {"<"}
+            {loadedScenario.ai1Name}:{loadedScenario.ai1Model}
+            {"#SYSTEM>"}
+            <br />
+            {loadedScenario.systemMessageAI1}
+          </div>
+          <div className="message-content">
+            {"<"}
+            {loadedScenario.ai2Name}:{loadedScenario.ai2Model}
+            {"#SYSTEM>"}
+            <br />
+            {loadedScenario.systemMessageAI2}
+          </div> */}
+        </div>
+      )}
 
       <div className="conversations-list">
         {isLoading ? (
