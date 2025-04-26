@@ -5,6 +5,7 @@ import { useParams, Link } from "react-router-dom";
 import "../styles/GrokConversation.css";
 import { LIVE_BACKROOMS_URL } from "../constants";
 import grokAscii from "../assets/grok-ascii.svg";
+
 // Typewriter component for animated text display
 const TypewriterMessage = ({
   message,
@@ -190,11 +191,21 @@ function GrokConversation() {
   return (
     <div className="container">
       <div className="header">
-        <h1>
+        <h1 className="desktop-only">
+          <img src={grokAscii} alt="The Grok Backrooms" />
+        </h1>
+        <h1 className="mobile-only">
           <img
-            src={grokAscii}
+            className="image-one"
+            src={"TheGrok.png"}
             alt="The Grok Backrooms"
-            style={{ width: "100%", maxWidth: "1200px" }}
+          />
+        </h1>
+        <h1 className="mobile-only">
+          <img
+            className="image-two"
+            src={"Backrooms.png"}
+            alt="The Grok Backrooms"
           />
         </h1>
       </div>
