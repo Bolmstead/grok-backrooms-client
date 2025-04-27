@@ -18,13 +18,14 @@ function SearchPage() {
   const [searchResults, setSearchResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState("");
-  const [selectedScenario, setSelectedScenario] = useState("Chapter 1");
+  const [selectedScenario, setSelectedScenario] = useState("Chapter_1");
   const [loadedScenario, setLoadedScenario] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalSearchResults, setModalSearchResults] = useState([]);
   const [modalPage, setModalPage] = useState(1);
   const [modalLoading, setModalLoading] = useState(false);
+
   const groupMessagesIntoConversations = (messages) => {
     const groupedConversations = [];
     const messagesPerGroup = 10;
@@ -36,7 +37,7 @@ function SearchPage() {
       const firstMessage = group[0];
       const lastMessage = group[group.length - 1];
 
-      const idRange = `${firstMessage._id}->${lastMessage._id}`;
+      const idRange = `${firstMessage._id}_${lastMessage._id}.txt`;
 
       // Create a title from the first message's content (truncated if too long)
       const title =
@@ -135,8 +136,9 @@ function SearchPage() {
       );
       console.log("🚀 ~ fetchConversations ~ response:", response);
       if (response.status !== 200) {
-        throw new Error("Failed to fetch conversations");
         setModalLoading(false);
+
+        throw new Error("Failed to fetch conversations");
       } else {
         console.log("searchedTerm:: ", searchTerm);
 
@@ -210,6 +212,7 @@ function SearchPage() {
 
   const handleScenarioClick = (scenario) => {
     setSelectedScenario(scenario);
+    setLoadedScenario(null);
     setPage(1); // Reset to first page on new search
   };
 
@@ -306,9 +309,7 @@ function SearchPage() {
               <h3>Search Results for "{searchedTerm}":</h3>
               <div className="search-results-container">
                 {/* Search results would go here */}
-                {modalSearchResults.length > 0 &&
-                !modalLoading &&
-                loadedScenario
+                {modalSearchResults.length > 0 && !modalLoading
                   ? modalSearchResults.map((message, index) => (
                       <a
                         key={message._id}
@@ -330,7 +331,7 @@ function SearchPage() {
                             }:${message._id}> ${new Date(
                               message.timestamp
                             ).toISOString()} | ${
-                              loadedScenario.scenarioId
+                              message.scenario.scenarioId
                             }`}</span>
                           </div>
                           <div className="message-content search-result-content">
@@ -391,19 +392,19 @@ function SearchPage() {
       >
         <button
           className={`scenario-button ${
-            selectedScenario === "Chapter 1" ? "active" : ""
+            selectedScenario === "Chapter_1" ? "active" : ""
           }`}
-          onClick={() => handleScenarioClick("Chapter 1")}
+          onClick={() => handleScenarioClick("Chapter_1")}
         >
           Chapter 1
         </button>
         <button
           className={`scenario-button ${
-            selectedScenario === "Grok v Grok" ? "active" : ""
+            selectedScenario === "Backrooms_3.5" ? "active" : ""
           }`}
-          onClick={() => handleScenarioClick("Grok v Grok")}
+          onClick={() => handleScenarioClick("Backrooms_3.5")}
         >
-          Grok v Grok
+          Backrooms 3.5
         </button>
         <button
           className={`scenario-button ${
@@ -434,6 +435,7 @@ function SearchPage() {
         <div className={`system-message`} style={{ marginBottom: "20px" }}>
           <div className="message-header">
             <span className="message-content">
+              scenario: {loadedScenario.scenarioId} <br />
               actors: {loadedScenario.ai1Name}, {loadedScenario.ai2Name} <br />
               models: {loadedScenario.ai1Model}, {loadedScenario.ai2Model}{" "}
               <br />
@@ -461,7 +463,7 @@ function SearchPage() {
       )}
 
       <div className="conversations-list">
-        {isLoading ? (
+        {isLoading && !loadedScenario ? (
           <div style={{ textAlign: "center", marginTop: "50px" }}>
             Loading...
           </div>
@@ -474,7 +476,10 @@ function SearchPage() {
             >
               <div className="conversation-item" style={{ padding: "10px" }}>
                 <h3>
-                  {loadedScenario.scenarioId}_{conversation.idRange}
+                  {"<"}
+                  {loadedScenario.scenarioId}
+                  {">"}
+                  {conversation.idRange}
                 </h3>
                 <span className="date">{conversation.title}</span>
               </div>

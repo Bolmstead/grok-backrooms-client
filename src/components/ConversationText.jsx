@@ -94,7 +94,7 @@ function ConversationText() {
             <Link to="/">
               <img
                 className="image-one"
-                src={"TheGrok.png"}
+                src={"/TheGrok.png"}
                 alt="The Grok Backrooms"
               />
             </Link>
@@ -103,7 +103,7 @@ function ConversationText() {
             <Link to="/">
               <img
                 className="image-two"
-                src={"Backrooms.png"}
+                src={"/Backrooms.png"}
                 alt="The Grok Backrooms"
               />
             </Link>
