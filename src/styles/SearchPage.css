@@ -77,11 +77,21 @@
 .conversation-item h3 {
   margin: 0 0 10px 0;
   color: #33ff33;
+  word-wrap: break-word;
+  word-break: break-word;
+  font-size: clamp(14px, 1.6vw, 16px);
+  line-height: 1.4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
 }
 
 .date {
   color: #999;
-  font-size: 14px;
+  font-size: clamp(12px, 1.4vw, 14px);
+  display: block;
+  word-wrap: break-word;
 }
 
 .pagination {
@@ -367,6 +377,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .main-title,
   .archive-title {
     width: 90%;
+  }
+
+  .conversation-item {
+    padding: 12px;
+  }
+
+  .conversation-item h3 {
+    gap: 3px;
   }
 }
 

@@ -7,6 +7,7 @@ import archive from "../assets/archive.svg";
 import { BACKROOMS_DATABASE_URL } from "../constants";
 
 function SearchPage() {
+  console.log("🚀 Initializing SearchPage component");
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
@@ -26,7 +27,8 @@ function SearchPage() {
   const [modalPage, setModalPage] = useState(1);
   const [modalLoading, setModalLoading] = useState(false);
 
-  const groupMessagesIntoConversations = (messages) => {
+  const groupMessagesIntoConversations = (messages, scenario) => {
+    console.log("📦 Grouping messages into conversations", messages.length);
     const groupedConversations = [];
     const messagesPerGroup = 10;
 
@@ -69,16 +71,23 @@ function SearchPage() {
         date: dateRange,
         messages: group,
         idRange,
+        scenarioId: scenario.scenarioId,
       });
     }
 
+    console.log(
+      "✨ Grouped conversations created:",
+      groupedConversations.length
+    );
     return groupedConversations;
   };
 
   useEffect(() => {
+    console.log("🔄 Fetching conversations for page:", page);
     const fetchConversations = async () => {
       setIsLoading(true);
       try {
+        console.log("📡 Making API request for scenario:", selectedScenario);
         const response = await axios.post(
           `${BACKROOMS_DATABASE_URL}/conversations`,
           {
@@ -86,23 +95,31 @@ function SearchPage() {
             scenarioName: selectedScenario,
           }
         );
-        console.log("🚀 ~ fetchConversations ~ response:", response);
+        console.log(
+          "✅ API response received:",
+          response.data.messages.length,
+          "messages"
+        );
         if (response.status !== 201) {
           throw new Error("Failed to fetch conversations");
         } else if (response.data.messages.length > 0) {
           const groupedConversations = groupMessagesIntoConversations(
-            response.data.messages
+            response.data.messages,
+            response.data.scenario
           );
+          setLoadedScenario(response.data.scenario);
+          console.log("🎭 Scenario loaded:", response.data.scenario.scenarioId);
+
           setConversations(groupedConversations);
           setIsLastPage(response.data.isLastPage);
-          setLoadedScenario(response.data.scenario);
         } else {
+          console.log("📭 No messages received");
           setConversations([]);
           setIsLastPage(true);
           setLoadedScenario(null);
         }
       } catch (error) {
-        console.error("Error fetching conversations:", error);
+        console.error("❌ Error fetching conversations:", error);
       } finally {
         setIsLoading(false);
       }
@@ -112,21 +129,24 @@ function SearchPage() {
   }, [page, selectedScenario]);
 
   const handleSearch = (e) => {
+    console.log("🔍 Search term updated:", e.target.value);
     setSearchTerm(e.target.value);
     setPage(1); // Reset to first page on new search
   };
 
   const toggleModal = () => {
+    console.log("🔄 Toggling modal:", !showModal);
     setShowModal(!showModal);
   };
 
   const handleSubmitSearch = async () => {
-    // Perform the search
+    console.log("🔎 Submitting search for term:", searchTerm);
     setShowModal(true);
     setModalPage(1);
     setModalLoading(true);
     setSearchedTerm(searchTerm);
     try {
+      console.log("📡 Making search API request");
       const response = await axios.post(
         `${BACKROOMS_DATABASE_URL}/conversations/search`,
         {
@@ -134,25 +154,25 @@ function SearchPage() {
           searchTerm: searchTerm,
         }
       );
-      console.log("🚀 ~ fetchConversations ~ response:", response);
+      console.log(
+        "✅ Search results received:",
+        response.data.length,
+        "results"
+      );
       if (response.status !== 200) {
         setModalLoading(false);
-
         throw new Error("Failed to fetch conversations");
       } else {
-        console.log("searchedTerm:: ", searchTerm);
-
         // Process the results to get context around the search term
+        console.log("🔄 Processing search results");
         const processedResults = response.data.map((message) => {
           const originalContent = message.content;
           const searchTermLower = searchTerm.toLowerCase();
           const contentLower = originalContent.toLowerCase();
 
-          // Find the first occurrence of the search term
           const indexOfMatch = contentLower.indexOf(searchTermLower);
 
           if (indexOfMatch === -1) {
-            // If somehow no match found (shouldn't happen), return full content
             return {
               ...message,
               originalContent,
@@ -161,20 +181,17 @@ function SearchPage() {
             };
           }
 
-          // Calculate start and end positions for the snippet
           const snippetStart = Math.max(0, indexOfMatch - 100);
           const snippetEnd = Math.min(
             originalContent.length,
             indexOfMatch + searchTerm.length + 100
           );
 
-          // Extract the snippet
           let snippetContent = originalContent.substring(
             snippetStart,
             snippetEnd
           );
 
-          // Add ellipses if we're not showing from the beginning or to the end
           if (snippetStart > 0) {
             snippetContent = "..." + snippetContent;
           }
@@ -190,36 +207,40 @@ function SearchPage() {
           };
         });
 
+        console.log("✨ Search results processed and ready to display");
         setModalSearchResults(processedResults);
         setModalLoading(false);
       }
     } catch (error) {
-      console.error("Error fetching conversations:", error);
+      console.error("❌ Error during search:", error);
       setModalLoading(false);
     }
   };
 
   const handleLoadMore = async () => {
+    console.log("📜 Loading more conversations");
     setIsLoading(true);
     try {
       navigate(`/conversation/${nextPageId}`);
     } catch (error) {
-      console.error("Error navigating to conversation:", error);
+      console.error("❌ Error navigating to conversation:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleScenarioClick = (scenario) => {
+    console.log("🎬 Switching to scenario:", scenario);
     setSelectedScenario(scenario);
     setLoadedScenario(null);
-    setPage(1); // Reset to first page on new search
+    setPage(1);
   };
 
   const filteredConversations = conversations.filter((conv) =>
     conv.title.toLowerCase()
   );
 
+  console.log("🎨 Rendering SearchPage component");
   return (
     <div className="container">
       <div
@@ -265,7 +286,7 @@ function SearchPage() {
       >
         ---------- archive ----------
       </div>
-      <div
+      {/* <div
         style={{
           display: "flex",
           justifyContent: "center",
@@ -273,7 +294,7 @@ function SearchPage() {
         }}
       >
         search through all 10,000+ Grok conversations or select a scenario below
-      </div>
+      </div> */}
       <div className="search-box" style={{ display: "flex", gap: "10px" }}>
         <input
           type="text"
@@ -476,10 +497,12 @@ function SearchPage() {
             >
               <div className="conversation-item" style={{ padding: "10px" }}>
                 <h3>
-                  {"<"}
-                  {loadedScenario.scenarioId}
-                  {">"}
-                  {conversation.idRange}
+                  <span>
+                    {"<"}
+                    {conversation.scenarioId}
+                    {">"}
+                  </span>
+                  <span>{conversation.idRange}</span>
                 </h3>
                 <span className="date">{conversation.title}</span>
               </div>
