@@ -123,24 +123,19 @@ function GorkConversation() {
 
   useEffect(() => {
     // Initialize socket connection
-    console.log("Initializing socket connection");
     const socketInstance = io(LIVE_BACKROOMS_URL);
-    console.log("Socket instance created:", socketInstance);
     setSocket(socketInstance);
 
     // Set up socket event listeners
     socketInstance.on("connect", () => {
-      console.log("Connected to server");
       setStatus("Connected to server");
     });
 
     socketInstance.on("disconnect", () => {
-      console.log("Disconnected from server");
       setStatus("Disconnected from server. Please refresh the page.");
     });
 
     socketInstance.on("newMessage", (data) => {
-      console.log("New message received:", data);
       if (isHidden) {
         return;
       }
@@ -157,7 +152,6 @@ function GorkConversation() {
     });
 
     socketInstance.on("conversationError", (data) => {
-      console.error("Conversation error:", data);
       setStatus(`Error: ${data.error}`);
     });
 
@@ -233,21 +227,18 @@ function GorkConversation() {
       </div>
 
       <div className="conversation" ref={conversationRef}>
-        {conversation.map((message, index) => {
-          console.log("Rendering message:", message, "at index:", index);
-          return (
-            <TypewriterMessage
-              key={message.timestamp}
-              message={message.content}
-              messageId={message._id}
-              scenario={message.scenario}
-              messageCreatedBy={message.messageCreatedBy}
-              isLatest={index === conversation.length - 1}
-              conversationRef={conversationRef}
-              timestamp={message.timestamp}
-            />
-          );
-        })}
+        {conversation.map((message, index) => (
+          <TypewriterMessage
+            key={message.timestamp}
+            message={message.content}
+            messageId={message._id}
+            scenario={message.scenario}
+            messageCreatedBy={message.messageCreatedBy}
+            isLatest={index === conversation.length - 1}
+            conversationRef={conversationRef}
+            timestamp={message.timestamp}
+          />
+        ))}
       </div>
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
@@ -276,12 +267,12 @@ function GorkConversation() {
         </a>
 
         <a
-          href="https://pump.fun/profile/7H1iGEeD5D5Gfn73fQa2cfkArp182uXXEYSkd4syDpp6"
+          href="https://pump.fun"
           target="_blank"
           rel="noopener noreferrer"
           style={{ fontWeight: "bold" }}
         >
-          see gork's coins
+          pumpfun
         </a>
         <a
           href="https://t.me/+WahMdi-cgTI2YTcx"
@@ -290,6 +281,14 @@ function GorkConversation() {
           style={{ fontWeight: "bold" }}
         >
           telegram
+        </a>
+        <a
+          href="https://pump.fun/profile/7H1iGEeD5D5Gfn73fQa2cfkArp182uXXEYSkd4syDpp6"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontWeight: "bold" }}
+        >
+          see gork's coins
         </a>
       </div>
     </div>
