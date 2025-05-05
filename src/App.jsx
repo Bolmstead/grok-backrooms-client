@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import GrokConversation from "./components/GrokConversation";
+import GorkConversation from "./components/GorkConversation";
 import ConversationText from "./components/ConversationText";
 import SearchPage from "./components/SearchPage";
 import NotFoundPage from "./components/NotFoundPage";
@@ -11,7 +11,7 @@ function App() {
     <Router>
       <div className="app">
         <Routes>
-          <Route path="/" element={<GrokConversation />} />
+          <Route path="/" element={<GorkConversation />} />
           <Route path="/archive" element={<SearchPage />} />
           <Route path="/conversation/:id" element={<ConversationText />} />
           <Route path="/ascii" element={<AsciiArtPage />} />

@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import "../styles/SearchPage.css";
 import axios from "axios";
-import degenAscii from "../assets/degen-ascii.svg";
-import archive from "../assets/archive.svg";
 import { BACKROOMS_DATABASE_URL } from "../constants";
 
 function SearchPage() {
@@ -19,7 +17,7 @@ function SearchPage() {
   const [searchResults, setSearchResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState("");
-  const [selectedScenario, setSelectedScenario] = useState("gorktest2");
+  const [selectedScenario, setSelectedScenario] = useState("chapter1");
   const [loadedScenario, setLoadedScenario] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -110,7 +108,8 @@ function SearchPage() {
           setLoadedScenario(response.data.scenario);
           console.log("🎭 Scenario loaded:", response.data.scenario.scenarioId);
 
-          setConversations(groupedConversations);
+          setConversations([...conversations, ...groupedConversations]);
+          console.log("response.data.isLastPage:: ", response.data.isLastPage);
           setIsLastPage(response.data.isLastPage);
         } else {
           console.log("📭 No messages received");
@@ -220,13 +219,7 @@ function SearchPage() {
   const handleLoadMore = async () => {
     console.log("📜 Loading more conversations");
     setIsLoading(true);
-    try {
-      navigate(`/conversation/${nextPageId}`);
-    } catch (error) {
-      console.error("❌ Error navigating to conversation:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    setPage(page + 1);
   };
 
   const handleScenarioClick = (scenario) => {
@@ -256,20 +249,20 @@ function SearchPage() {
       <div className="container">
         <div className="header">
           <h1 className="desktop-only">
-            <img src={degenAscii} alt="The Degen Backrooms" />
+            <img src={"TheGorkBackRoomsTitle.png"} alt="The Gork Backrooms" />
           </h1>
           <h1 className="mobile-only">
             <img
               className="image-one"
-              src={"TheDegenTitle.png"}
-              alt="The Degen Backrooms"
+              src={"TheGorkTitle.png"}
+              alt="The Gork Backrooms"
             />
           </h1>
           <h1 className="mobile-only">
             <img
               className="image-two"
               src={"BackroomsTitle.png"}
-              alt="The Degen Backrooms"
+              alt="The Gork Backrooms"
             />
           </h1>
         </div>
@@ -289,7 +282,7 @@ function SearchPage() {
           marginBottom: "20px",
         }}
       >
-        search through all 10,000+ Grok conversations or select a scenario below
+        search through all 10,000+ gork conversations or select a scenario below
       </div> */}
         <div className="search-box" style={{ display: "flex", gap: "10px" }}>
           <input
@@ -409,25 +402,27 @@ function SearchPage() {
         >
           <button
             className={`scenario-button ${
-              selectedScenario === "gorktest2" ? "active" : ""
+              selectedScenario === "chapter1" ? "active" : ""
             }`}
-            onClick={() => handleScenarioClick("gorktest2")}
+            onClick={() => handleScenarioClick("chapter1")}
           >
-            Gork Test
+            Chapter 1
           </button>
           <button
             className={`scenario-button ${
               selectedScenario === "DeepSeek_Diaries" ? "active" : ""
             }`}
             onClick={() => handleScenarioClick("DeepSeek_Diaries")}
+            disabled={true}
           >
-            DeepSeek Diaries
+            gork & Grok
           </button>
           <button
             className={`scenario-button ${
               selectedScenario === "Backrooms_3.5" ? "active" : ""
             }`}
             onClick={() => handleScenarioClick("Backrooms_3.5")}
+            disabled={true}
           >
             Backrooms 3.5
           </button>
@@ -437,8 +432,9 @@ function SearchPage() {
               selectedScenario === "Philosophy" ? "active" : ""
             }`}
             onClick={() => handleScenarioClick("Philosophy")}
+            disabled={true}
           >
-            Philosophy
+            gork v Trump
           </button>
         </div>
         {loadedScenario && (
@@ -512,6 +508,7 @@ function SearchPage() {
             <button
               onClick={() => handleLoadMore("next")}
               className="pagination-button"
+              disabled={isLoading}
             >
               load more
             </button>

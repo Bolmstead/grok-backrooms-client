@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/AsciiArtPage.css";
-import degenAscii from "../assets/degen-ascii.svg";
+import asciiArt from "../assets/grok-ascii.svg";
 function AsciiArtPage() {
   return (
     <div className="ascii-art-container">
@@ -57,7 +57,7 @@ function AsciiArtPage() {
     ...                                                                                             
                `} */}
       </pre>
-      <img src={degenAscii} alt="The Degen Backrooms" />
+      <img src={asciiArt} alt="The Gork Backrooms" />
 
       <div className="navigation-links"></div>
     </div>

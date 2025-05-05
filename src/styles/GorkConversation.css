@@ -2,7 +2,7 @@ body {
   font-family: "Courier New", Courier, monospace;
   margin: 0;
   padding: 20px;
-  background-color: #0f0f0f;
+  background-color: #000000;
   color: #33ff33;
 }
 
@@ -88,12 +88,12 @@ button:disabled {
   white-space: pre-wrap;
 }
 
-.grok1 {
+.gorkk1 {
   background-color: #113311;
   border-left: 4px solid #33ff33;
 }
 
-.grok2 {
+.gork2 {
   background-color: #111133;
   border-left: 4px solid #3333ff;
 }

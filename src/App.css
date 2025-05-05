@@ -14,7 +14,7 @@
 .app {
   width: 100%;
   min-height: 100vh;
-  background-color: #0f0f0f;
+  background-color: #000000;
   font-family: "Courier New", Courier, monospace;
 }
 
@@ -52,4 +52,9 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.gorksGraphic {
+  width: 300px;
+  margin: 20px;
 }

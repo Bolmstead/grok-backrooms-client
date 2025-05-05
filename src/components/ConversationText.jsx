@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import "../styles/SearchPage.css";
 import axios from "axios";
-import degenAscii from "../assets/degen-ascii.svg";
 import { BACKROOMS_DATABASE_URL } from "../constants";
 import { useNavigate } from "react-router-dom";
 
@@ -86,20 +85,20 @@ function ConversationText() {
       <div className="container">
         <div className="header">
           <h1 className="desktop-only">
-            <img src={degenAscii} alt="The Degen Backrooms" />
+            <img src={"/TheGorkBackRoomsTitle.png"} alt="The Gork Backrooms" />
           </h1>
           <h1 className="mobile-only">
             <img
               className="image-one"
-              src={"/TheDegenTitle.png"}
-              alt="The Degen Backrooms"
+              src={"/TheGorkTitle.png"}
+              alt="The Gork Backrooms"
             />
           </h1>
           <h1 className="mobile-only">
             <img
               className="image-two"
               src={"/BackroomsTitle.png"}
-              alt="The Degen Backrooms"
+              alt="The Gork Backrooms"
             />
           </h1>
         </div>
@@ -140,7 +139,10 @@ function ConversationText() {
       )}
       <div className="conversations-list">
         {isLoading && !loadedScenario && !error ? (
-          <div className="conversation-item"></div>
+          <div
+            className="conversation-item"
+            style={{ backgroundColor: "black" }}
+          ></div>
         ) : error && !isLoading ? (
           <div
             style={{
@@ -159,8 +161,8 @@ function ConversationText() {
                 scenario: {loadedScenario.scenarioId} <br />
                 actors: {loadedScenario.ai1Name}, {loadedScenario.ai2Name}{" "}
                 <br />
-                trained models: {loadedScenario.ai1Model}, {loadedScenario.ai2Model}{" "}
-                <br />
+                trained models: {loadedScenario.ai1Model},{" "}
+                {loadedScenario.ai2Model} <br />
                 temperature: {loadedScenario.ai1Temperature},
                 {loadedScenario.ai2Temperature} <br />
                 gork's wallet: <br />
@@ -188,7 +190,11 @@ function ConversationText() {
         {isLoading ? (
           <div
             className="conversation-item"
-            style={{ textAlign: "center", marginTop: "100px" }}
+            style={{
+              textAlign: "center",
+              marginTop: "100px",
+              backgroundColor: "black",
+            }}
           >
             Loading...
           </div>

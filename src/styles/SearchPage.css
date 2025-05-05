@@ -127,7 +127,7 @@
 }
 
 .pagination-button {
-  background-color: #111;
+  background-color: #000000;
   border: none;
   color: #33ff33;
   text-decoration: underline;
@@ -136,6 +136,7 @@
   font-family: "Courier New", Courier, monospace;
   transition: all 0.3s ease;
   margin-bottom: 10px;
+  border-radius: 5px;
 }
 
 .pagination-button:hover:not(:disabled) {
