@@ -8,4 +8,4 @@ export const LIVE_BACKROOMS_URL =
   import.meta.env.VITE_APP_ENV === "production" &&
   import.meta.env.VITE_LIVE_BACKROOMS_URL
     ? import.meta.env.VITE_LIVE_BACKROOMS_URL
-    : "http://localhost:6969";
+    : "http://localhost:4444";

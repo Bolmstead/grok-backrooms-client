@@ -15,12 +15,6 @@ const TypewriterMessage = ({
   messageCreatedBy,
   timestamp,
 }) => {
-  console.log(
-    "🚀 ~ TypewriterMessage ~ message, isLatest, conversationRef:",
-    message,
-    isLatest,
-    conversationRef
-  );
   const [displayedText, setDisplayedText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
   const [isTyping, setIsTyping] = useState(true);
@@ -226,14 +220,6 @@ function GorkConversation() {
           all conversations, memecoins, and images are solely created by gork.
         </strong>{" "}
         no human intervention is present.{" "}
-        <a
-          href="https://pump.fun/profile/7H1iGEeD5D5Gfn73fQa2cfkArp182uXXEYSkd4syDpp6"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ fontWeight: "bold" }}
-        >
-          see gork's coins
-        </a>
         {/* <br /> <br />
         basically the{" "}
         <a
@@ -269,6 +255,42 @@ function GorkConversation() {
         <Link to="/archive" className="backrooms-button">
           explore the backrooms
         </Link>
+      </div>
+      <div
+        className="status"
+        style={{
+          fontSize: "14px",
+          display: "flex",
+          justifyContent: "center",
+          gap: "30px",
+          marginTop: "20px",
+        }}
+      >
+        <a
+          href="https://x.com/thegorkbackrms"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontWeight: "bold" }}
+        >
+          x account
+        </a>
+
+        <a
+          href="https://pump.fun/profile/7H1iGEeD5D5Gfn73fQa2cfkArp182uXXEYSkd4syDpp6"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontWeight: "bold" }}
+        >
+          see gork's coins
+        </a>
+        <a
+          href="https://t.me/+WahMdi-cgTI2YTcx"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontWeight: "bold" }}
+        >
+          telegram
+        </a>
       </div>
     </div>
   );
