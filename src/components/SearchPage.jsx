@@ -323,9 +323,9 @@ function SearchPage() {
                   {/* Search results would go here */}
                   {modalSearchResults.length > 0 && !modalLoading
                     ? modalSearchResults.map((message, index) => (
-                        <a
+                        <Link
                           key={message._id}
-                          href={`/conversation/${message._id}`}
+                          to={`/conversation/${message._id}`}
                           style={{ textDecoration: "none" }}
                         >
                           <div
@@ -366,7 +366,7 @@ function SearchPage() {
                                 )}
                             </div>
                           </div>
-                        </a>
+                        </Link>
                       ))
                     : null}
                   {modalSearchResults.length === 0 && !modalLoading && (
