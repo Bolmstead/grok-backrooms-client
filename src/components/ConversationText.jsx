@@ -84,23 +84,28 @@ function ConversationText() {
       </div>
       <div className="container">
         <div className="header">
-          <h1 className="desktop-only">
-            <img src={"/TheGorkBackRoomsTitle.png"} alt="The Gork Backrooms" />
-          </h1>
-          <h1 className="mobile-only">
-            <img
-              className="image-one"
-              src={"/TheGorkTitle.png"}
-              alt="The Gork Backrooms"
-            />
-          </h1>
-          <h1 className="mobile-only">
-            <img
-              className="image-two"
-              src={"/BackroomsTitle.png"}
-              alt="The Gork Backrooms"
-            />
-          </h1>
+          <Link to="/">
+            <h1 className="desktop-only">
+              <img
+                src={"/TheGorkBackRoomsTitle.png"}
+                alt="The Gork Backrooms"
+              />
+            </h1>
+            <h1 className="mobile-only">
+              <img
+                className="image-one"
+                src={"/TheGorkTitle.png"}
+                alt="The Gork Backrooms"
+              />
+            </h1>
+            <h1 className="mobile-only">
+              <img
+                className="image-two"
+                src={"/BackroomsTitle.png"}
+                alt="The Gork Backrooms"
+              />
+            </h1>
+          </Link>
         </div>
         <div
           style={{
@@ -165,7 +170,16 @@ function ConversationText() {
                 {loadedScenario.ai2Model} <br />
                 temperature: {loadedScenario.ai1Temperature},
                 {loadedScenario.ai2Temperature} <br />
-                gork's wallet: <br />
+                gork's wallet:{" "}
+                <a
+                  href="https://pump.fun/profile/7H1iGEeD5D5Gfn73fQa2cfkArp182uXXEYSkd4syDpp6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "white" }}
+                >
+                  7H1iGEeD5D5Gfn73fQa2cfkArp182uXXEYSkd4syDpp6
+                </a>
+                <br />
               </span>
             </div>
             {/* <div className="message-content">
