@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/AsciiArtPage.css";
-
+import degenAscii from "../assets/degen-ascii.svg";
 function AsciiArtPage() {
   return (
     <div className="ascii-art-container">
       <pre className="ascii-art">
-        {`                                                                                              ..    
+        {/* {`                                                                                              ..    
                                                                                              ::.    
                                                                                            .*:      
                                                                                          .**.       
@@ -55,8 +55,10 @@ function AsciiArtPage() {
       .:#:                                                                                          
      .=:                                                                                            
     ...                                                                                             
-               `}
+               `} */}
       </pre>
+      <img src={degenAscii} alt="The Degen Backrooms" />
+
       <div className="navigation-links"></div>
     </div>
   );

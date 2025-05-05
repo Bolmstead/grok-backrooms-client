@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import "../styles/SearchPage.css";
 import axios from "axios";
-import grokAscii from "../assets/grok-ascii.svg";
+import degenAscii from "../assets/degen-ascii.svg";
 import { BACKROOMS_DATABASE_URL } from "../constants";
 import { useNavigate } from "react-router-dom";
 
@@ -74,39 +74,33 @@ function ConversationText() {
 
   return (
     <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "left",
+          marginBottom: "20px",
+        }}
+      >
+        <Link to="/archive">{"<"} search</Link>
+      </div>
       <div className="container">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <Link to="/archive">{"<"} search</Link>
-        </div>
         <div className="header">
           <h1 className="desktop-only">
-            <Link to="/">
-              <img src={grokAscii} alt="The Grok Backrooms" />
-            </Link>
+            <img src={degenAscii} alt="The Degen Backrooms" />
           </h1>
           <h1 className="mobile-only">
-            <Link to="/">
-              <img
-                className="image-one"
-                src={"/TheGrok.png"}
-                alt="The Grok Backrooms"
-              />
-            </Link>
+            <img
+              className="image-one"
+              src={"/TheDegenTitle.png"}
+              alt="The Degen Backrooms"
+            />
           </h1>
           <h1 className="mobile-only">
-            <Link to="/">
-              <img
-                className="image-two"
-                src={"/Backrooms.png"}
-                alt="The Grok Backrooms"
-              />
-            </Link>
+            <img
+              className="image-two"
+              src={"/BackroomsTitle.png"}
+              alt="The Degen Backrooms"
+            />
           </h1>
         </div>
         <div
@@ -165,19 +159,14 @@ function ConversationText() {
                 scenario: {loadedScenario.scenarioId} <br />
                 actors: {loadedScenario.ai1Name}, {loadedScenario.ai2Name}{" "}
                 <br />
-                models: {loadedScenario.ai1Model}, {loadedScenario.ai2Model}{" "}
+                trained models: {loadedScenario.ai1Model}, {loadedScenario.ai2Model}{" "}
                 <br />
                 temperature: {loadedScenario.ai1Temperature},
                 {loadedScenario.ai2Temperature} <br />
-                number of messages: <br />
-                note: <br /> <br />
-                Grok's wallet: <br />
-                ai-created coins: <br />
-                <br />
-                <br />
+                gork's wallet: <br />
               </span>
             </div>
-            <div className="message-content">
+            {/* <div className="message-content">
               {"<"}
               {loadedScenario.ai1Name}:{loadedScenario.ai1Model}
               {"#SYSTEM>"}
@@ -190,7 +179,7 @@ function ConversationText() {
               {"#SYSTEM>"}
               <br />
               {loadedScenario.systemMessageAI2}
-            </div>
+            </div> */}
           </div>
         )}
       </div>

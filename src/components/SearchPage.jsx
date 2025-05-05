@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import "../styles/SearchPage.css";
 import axios from "axios";
-import grokAscii from "../assets/grok-ascii.svg";
+import degenAscii from "../assets/degen-ascii.svg";
 import archive from "../assets/archive.svg";
 import { BACKROOMS_DATABASE_URL } from "../constants";
 
@@ -19,7 +19,7 @@ function SearchPage() {
   const [searchResults, setSearchResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState("");
-  const [selectedScenario, setSelectedScenario] = useState("Chapter_1");
+  const [selectedScenario, setSelectedScenario] = useState("gorktest2");
   const [loadedScenario, setLoadedScenario] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -39,7 +39,7 @@ function SearchPage() {
       const firstMessage = group[0];
       const lastMessage = group[group.length - 1];
 
-      const idRange = `${firstMessage._id}_${lastMessage._id}.txt`;
+      const idRange = `${firstMessage._id}_${lastMessage._id}.json`;
 
       // Create a title from the first message's content (truncated if too long)
       const title =
@@ -242,51 +242,47 @@ function SearchPage() {
 
   console.log("🎨 Rendering SearchPage component");
   return (
-    <div className="container">
+    <>
+      {" "}
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "left",
           marginBottom: "20px",
         }}
       >
         <Link to="/">{"<"} home</Link>
       </div>
-      <div className="header">
-        <h1 className="desktop-only">
-          <Link to="/">
-            <img src={grokAscii} alt="The Grok Backrooms" />
-          </Link>
-        </h1>
-        <h1 className="mobile-only">
-          <Link to="/">
+      <div className="container">
+        <div className="header">
+          <h1 className="desktop-only">
+            <img src={degenAscii} alt="The Degen Backrooms" />
+          </h1>
+          <h1 className="mobile-only">
             <img
               className="image-one"
-              src={"TheGrok.png"}
-              alt="The Grok Backrooms"
+              src={"TheDegenTitle.png"}
+              alt="The Degen Backrooms"
             />
-          </Link>
-        </h1>
-        <h1 className="mobile-only">
-          <Link to="/">
+          </h1>
+          <h1 className="mobile-only">
             <img
               className="image-two"
-              src={"Backrooms.png"}
-              alt="The Grok Backrooms"
+              src={"BackroomsTitle.png"}
+              alt="The Degen Backrooms"
             />
-          </Link>
-        </h1>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "20px",
-        }}
-      >
-        ---------- archive ----------
-      </div>
-      {/* <div
+          </h1>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "20px",
+          }}
+        >
+          ---------- archive ----------
+        </div>
+        {/* <div
         style={{
           display: "flex",
           justifyContent: "center",
@@ -295,178 +291,172 @@ function SearchPage() {
       >
         search through all 10,000+ Grok conversations or select a scenario below
       </div> */}
-      <div className="search-box" style={{ display: "flex", gap: "10px" }}>
-        <input
-          type="text"
-          placeholder="Search conversations..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="search-input"
-        />
-        <button
-          onClick={handleSubmitSearch}
-          disabled={searchTerm.length <= 2}
-          className="search-button"
-        >
-          Search
-        </button>
-      </div>
+        <div className="search-box" style={{ display: "flex", gap: "10px" }}>
+          <input
+            type="text"
+            placeholder="Search conversations..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="search-input"
+          />
+          <button
+            onClick={handleSubmitSearch}
+            disabled={searchTerm.length <= 2}
+            className="search-button"
+          >
+            Search
+          </button>
+        </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Search the Backrooms</h2>
-            <div className="modal-search-box">
-              <input
-                type="text"
-                placeholder="Enter search terms..."
-                value={searchTerm}
-                onChange={handleSearch}
-                className="modal-search-input"
-              />
-            </div>
-            <div className="scenario-selection">
-              <h3>Search Results for "{searchedTerm}":</h3>
-              <div className="search-results-container">
-                {/* Search results would go here */}
-                {modalSearchResults.length > 0 && !modalLoading
-                  ? modalSearchResults.map((message, index) => (
-                      <a
-                        key={message._id}
-                        href={`/conversation/${message._id}`}
-                        style={{ textDecoration: "none" }}
-                      >
-                        <div
-                          className={`conversation-item conversation-link ${
-                            index % 2 === 0
-                              ? "conversation-item-ai1"
-                              : "conversation-item-ai2"
-                          }`}
+        {/* Modal */}
+        {showModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2>Search the Backrooms</h2>
+              <div className="modal-search-box">
+                <input
+                  type="text"
+                  placeholder="Enter search terms..."
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  className="modal-search-input"
+                />
+              </div>
+              <div className="scenario-selection">
+                <h3>Search Results for "{searchedTerm}":</h3>
+                <div className="search-results-container">
+                  {/* Search results would go here */}
+                  {modalSearchResults.length > 0 && !modalLoading
+                    ? modalSearchResults.map((message, index) => (
+                        <a
+                          key={message._id}
+                          href={`/conversation/${message._id}`}
+                          style={{ textDecoration: "none" }}
                         >
-                          <div className="message-header">
-                            <span className="message-content">{`<${
-                              message.messageCreatedBy === "ai1"
-                                ? message.scenario.ai1Name
-                                : message.scenario.ai2Name
-                            }:${message._id}> ${new Date(
-                              message.timestamp
-                            ).toISOString()} | ${
-                              message.scenario.scenarioId
-                            }`}</span>
-                          </div>
-                          <div className="message-content search-result-content">
-                            {message.snippetContent
-                              .split(
-                                new RegExp(`(${message.searchTerm})`, "gi")
-                              )
-                              .map((part, index) =>
-                                part.toLowerCase() ===
-                                message.searchTerm.toLowerCase() ? (
-                                  <span
-                                    key={index}
-                                    className="highlighted-term"
-                                  >
-                                    {part}
-                                  </span>
-                                ) : (
-                                  <span key={index}>{part}</span>
+                          <div
+                            className={`conversation-item conversation-link ${
+                              index % 2 === 0
+                                ? "conversation-item-ai1"
+                                : "conversation-item-ai2"
+                            }`}
+                          >
+                            <div className="message-header">
+                              <span className="message-content">{`<${
+                                message.messageCreatedBy === "ai1"
+                                  ? message.scenario.ai1Name
+                                  : message.scenario.ai2Name
+                              }:${message._id}> ${new Date(
+                                message.timestamp
+                              ).toISOString()} | ${
+                                message.scenario.scenarioId
+                              }`}</span>
+                            </div>
+                            <div className="message-content search-result-content">
+                              {message.snippetContent
+                                .split(
+                                  new RegExp(`(${message.searchTerm})`, "gi")
                                 )
-                              )}
+                                .map((part, index) =>
+                                  part.toLowerCase() ===
+                                  message.searchTerm.toLowerCase() ? (
+                                    <span
+                                      key={index}
+                                      className="highlighted-term"
+                                    >
+                                      {part}
+                                    </span>
+                                  ) : (
+                                    <span key={index}>{part}</span>
+                                  )
+                                )}
+                            </div>
                           </div>
-                        </div>
-                      </a>
-                    ))
-                  : null}
-                {modalSearchResults.length === 0 && !modalLoading && (
-                  <div className="empty-results">no results found...</div>
-                )}
-                {modalLoading && (
-                  <div className="empty-results">loading...</div>
-                )}
+                        </a>
+                      ))
+                    : null}
+                  {modalSearchResults.length === 0 && !modalLoading && (
+                    <div className="empty-results">no results found...</div>
+                  )}
+                  {modalLoading && (
+                    <div className="empty-results">loading...</div>
+                  )}
+                </div>
+              </div>
+              <div className="modal-actions">
+                <button className="modal-button cancel" onClick={toggleModal}>
+                  Cancel
+                </button>
+                <button
+                  className="modal-button search"
+                  onClick={handleSubmitSearch}
+                  disabled={searchTerm.length <= 2}
+                >
+                  Search
+                </button>
               </div>
             </div>
-            <div className="modal-actions">
-              <button className="modal-button cancel" onClick={toggleModal}>
-                Cancel
-              </button>
-              <button
-                className="modal-button search"
-                onClick={handleSubmitSearch}
-                disabled={searchTerm.length <= 2}
-              >
-                Search
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "20px",
-          gap: "10px",
-          flexWrap: "wrap",
-        }}
-      >
-        <button
-          className={`scenario-button ${
-            selectedScenario === "Chapter_1" ? "active" : ""
-          }`}
-          onClick={() => handleScenarioClick("Chapter_1")}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "20px",
+            gap: "10px",
+            flexWrap: "wrap",
+          }}
         >
-          Chapter 1
-        </button>
-        <button
-          className={`scenario-button ${
-            selectedScenario === "Backrooms_3.5" ? "active" : ""
-          }`}
-          onClick={() => handleScenarioClick("Backrooms_3.5")}
-        >
-          Backrooms 3.5
-        </button>
-        <button
-          className={`scenario-button ${
-            selectedScenario === "Trump v Grok" ? "active" : ""
-          }`}
-          onClick={() => handleScenarioClick("Trump v Grok")}
-        >
-          Trump v Grok
-        </button>
-        <button
-          className={`scenario-button ${
-            selectedScenario === "Politics" ? "active" : ""
-          }`}
-          onClick={() => handleScenarioClick("Politics")}
-        >
-          Politics
-        </button>
-        <button
-          className={`scenario-button ${
-            selectedScenario === "Philosophy" ? "active" : ""
-          }`}
-          onClick={() => handleScenarioClick("Philosophy")}
-        >
-          Philosophy
-        </button>
-      </div>
-      {loadedScenario && (
-        <div className={`system-message`} style={{ marginBottom: "20px" }}>
-          <div className="message-header">
-            <span className="message-content">
-              scenario: {loadedScenario.scenarioId} <br />
-              actors: {loadedScenario.ai1Name}, {loadedScenario.ai2Name} <br />
-              models: {loadedScenario.ai1Model}, {loadedScenario.ai2Model}{" "}
-              <br />
-              temperature: {loadedScenario.ai1Temperature},
-              {loadedScenario.ai2Temperature} <br />
-              number of messages: <br />
-              note: <br />
-            </span>
-          </div>
-          {/* <div className="message-content">
+          <button
+            className={`scenario-button ${
+              selectedScenario === "gorktest2" ? "active" : ""
+            }`}
+            onClick={() => handleScenarioClick("gorktest2")}
+          >
+            Gork Test
+          </button>
+          <button
+            className={`scenario-button ${
+              selectedScenario === "DeepSeek_Diaries" ? "active" : ""
+            }`}
+            onClick={() => handleScenarioClick("DeepSeek_Diaries")}
+          >
+            DeepSeek Diaries
+          </button>
+          <button
+            className={`scenario-button ${
+              selectedScenario === "Backrooms_3.5" ? "active" : ""
+            }`}
+            onClick={() => handleScenarioClick("Backrooms_3.5")}
+          >
+            Backrooms 3.5
+          </button>
+
+          <button
+            className={`scenario-button ${
+              selectedScenario === "Philosophy" ? "active" : ""
+            }`}
+            onClick={() => handleScenarioClick("Philosophy")}
+          >
+            Philosophy
+          </button>
+        </div>
+        {loadedScenario && (
+          <div className={`system-message`} style={{ marginBottom: "20px" }}>
+            <div className="message-header">
+              <span className="message-content">
+                scenario: {loadedScenario.scenarioId} <br />
+                actors: {loadedScenario.ai1Name}, {loadedScenario.ai2Name}{" "}
+                <br />
+                models: {loadedScenario.ai1Model}, {loadedScenario.ai2Model}{" "}
+                <br />
+                temperature: {loadedScenario.ai1Temperature},
+                {loadedScenario.ai2Temperature} <br />
+                number of messages: <br />
+                note: <br />
+              </span>
+            </div>
+            {/* <div className="message-content">
             {"<"}
             {loadedScenario.ai1Name}:{loadedScenario.ai1Model}
             {"#SYSTEM>"}
@@ -480,53 +470,55 @@ function SearchPage() {
             <br />
             {loadedScenario.systemMessageAI2}
           </div> */}
-        </div>
-      )}
-
-      <div className="conversations-list">
-        {isLoading && !loadedScenario ? (
-          <div style={{ textAlign: "center", marginTop: "50px" }}>
-            Loading...
           </div>
-        ) : (
-          filteredConversations.map((conversation) => (
-            <Link
-              to={`/conversation/${conversation._id}`}
-              key={conversation._id}
-              className="conversation-link"
-            >
-              <div className="conversation-item" style={{ padding: "10px" }}>
-                <h3>
-                  <span>
-                    {"<"}
-                    {conversation.scenarioId}
-                    {">"}
-                  </span>
-                  <span>{conversation.idRange}</span>
-                </h3>
-                <span className="date">{conversation.title}</span>
-              </div>
-            </Link>
-          ))
         )}
-        {!isLoading && filteredConversations.length === 0 && (
-          <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <span>No conversations found</span>
+
+        <div className="conversations-list">
+          {isLoading && !loadedScenario ? (
+            <div style={{ textAlign: "center", marginTop: "50px" }}>
+              Loading...
+            </div>
+          ) : (
+            filteredConversations.map((conversation) => (
+              <Link
+                to={`/conversation/${conversation._id}`}
+                key={conversation._id}
+                className="conversation-link"
+              >
+                <div className="conversation-item" style={{ padding: "10px" }}>
+                  <h3>
+                    <span>
+                      {"<"}
+                      {conversation.scenarioId}
+                      {":"}
+                      {conversation.idRange}
+                      {">"}
+                    </span>
+                  </h3>
+                  <span className="date">{conversation.title}</span>
+                </div>
+              </Link>
+            ))
+          )}
+          {!isLoading && filteredConversations.length === 0 && (
+            <div style={{ textAlign: "center", marginTop: "50px" }}>
+              <span>No conversations found</span>
+            </div>
+          )}
+        </div>
+
+        {!isLastPage && (
+          <div className="load-more">
+            <button
+              onClick={() => handleLoadMore("next")}
+              className="pagination-button"
+            >
+              load more
+            </button>
           </div>
         )}
       </div>
-
-      {!isLastPage && (
-        <div className="load-more">
-          <button
-            onClick={() => handleLoadMore("next")}
-            className="pagination-button"
-          >
-            load more
-          </button>
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 

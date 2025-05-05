@@ -150,12 +150,127 @@ pre {
   transition: all 0.3s ease;
   font-family: "Courier New", Courier, monospace;
   border-radius: 0px;
+  animation: pixelateButtonAlternative 8s infinite;
+  position: relative;
 }
 
 .backrooms-button:hover {
   background-color: #33ff33;
   color: black;
   box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
+  animation: none;
+}
+
+.backrooms-button::before {
+  content: "explore the backrooms";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  border: 1px solid #33ff33;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  animation: glitchEffect 8s infinite;
+}
+
+/* Alternative simpler pixelation using blur and contrast for better browser support */
+@keyframes pixelateButtonAlternative {
+  0%,
+  89% {
+    filter: none;
+  }
+  90% {
+    filter: blur(1px) contrast(1.2);
+    transform: translate(-1px, 1px);
+  }
+  91% {
+    filter: blur(0px) contrast(1);
+    transform: translate(1px, -1px);
+  }
+  92% {
+    filter: blur(1.5px) contrast(1.3);
+    transform: translate(1px, 1px);
+  }
+  93% {
+    filter: blur(0.5px) contrast(1.1);
+    transform: translate(-1px, -1px);
+  }
+  94% {
+    filter: blur(2.5px) contrast(1.5);
+    transform: translate(1px, 0px);
+  }
+  95% {
+    filter: blur(0.5px) contrast(1.2);
+    transform: translate(0px, 1px);
+  }
+  96% {
+    filter: blur(1.5px) contrast(1.3);
+    transform: translate(-1px, 0px);
+  }
+  97% {
+    filter: blur(0px) contrast(1);
+    transform: translate(0px, 0px);
+  }
+  98%,
+  100% {
+    filter: none;
+    transform: translate(0px, 0px);
+  }
+}
+
+@keyframes glitchEffect {
+  0%,
+  89% {
+    opacity: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  90% {
+    opacity: 0.1;
+    clip-path: polygon(10% 10%, 90% 10%, 90% 90%, 10% 90%);
+    transform: translate(2px, -2px);
+    color: #ff33ff;
+  }
+  91% {
+    opacity: 0;
+    transform: translate(-2px, 2px);
+  }
+  92% {
+    opacity: 0.2;
+    clip-path: polygon(5% 5%, 95% 5%, 95% 95%, 5% 95%);
+    transform: translate(-3px, 0px);
+    color: #33ffff;
+  }
+  93% {
+    opacity: 0;
+    transform: translate(3px, 0px);
+  }
+  94% {
+    opacity: 0.1;
+    clip-path: polygon(0% 15%, 100% 15%, 100% 85%, 0% 85%);
+    transform: translate(0px, 3px);
+    color: #ff3333;
+  }
+  95% {
+    opacity: 0;
+    transform: translate(0px, -3px);
+  }
+  96% {
+    opacity: 0.2;
+    clip-path: polygon(15% 0%, 85% 0%, 85% 100%, 15% 100%);
+    transform: translate(-2px, -2px);
+    color: #ffff33;
+  }
+  97%,
+  100% {
+    opacity: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: translate(0px, 0px);
+  }
 }
 
 /* Mobile and Desktop Display Classes */

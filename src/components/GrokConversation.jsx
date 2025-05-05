@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import "../styles/GrokConversation.css";
 import { LIVE_BACKROOMS_URL } from "../constants";
-import grokAscii from "../assets/grok-ascii.svg";
+import degenAscii from "../assets/degen-ascii.svg";
 
 // Typewriter component for animated text display
 const TypewriterMessage = ({
@@ -192,20 +192,20 @@ function GrokConversation() {
     <div className="container">
       <div className="header">
         <h1 className="desktop-only">
-          <img src={grokAscii} alt="The Grok Backrooms" />
+          <img src={degenAscii} alt="The Degen Backrooms" />
         </h1>
         <h1 className="mobile-only">
           <img
             className="image-one"
-            src={"TheGrok.png"}
-            alt="The Grok Backrooms"
+            src={"TheDegenTitle.png"}
+            alt="The Degen Backrooms"
           />
         </h1>
         <h1 className="mobile-only">
           <img
             className="image-two"
-            src={"Backrooms.png"}
-            alt="The Grok Backrooms"
+            src={"BackroomsTitle.png"}
+            alt="The Degen Backrooms"
           />
         </h1>
       </div>
