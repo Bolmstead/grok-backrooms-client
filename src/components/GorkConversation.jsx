@@ -258,7 +258,7 @@ function GorkConversation() {
         }}
       >
         <a
-          href="https://x.com/thegorkbackrms"
+          href="https://x.com/gork_backrooms"
           target="_blank"
           rel="noopener noreferrer"
           style={{ fontWeight: "bold" }}
