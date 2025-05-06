@@ -172,12 +172,12 @@ function ConversationText() {
                 {loadedScenario.ai2Temperature} <br />
                 gork's wallet:{" "}
                 <a
-                  href="https://pump.fun/profile/7H1iGEeD5D5Gfn73fQa2cfkArp182uXXEYSkd4syDpp6"
+                  href="https://pump.fun/profile/CXELdoJp4zAjBtg15HN5dUB6LenGc1hwexr5mTVtDay3"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: "white" }}
                 >
-                  7H1iGEeD5D5Gfn73fQa2cfkArp182uXXEYSkd4syDpp6
+                  CXELdoJp4zAjBtg15HN5dUB6LenGc1hwexr5mTVtDay3
                 </a>
                 <br />
               </span>
