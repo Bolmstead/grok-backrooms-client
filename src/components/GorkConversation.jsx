@@ -286,7 +286,7 @@ function GorkConversation() {
           href="https://pump.fun/profile/CXELdoJp4zAjBtg15HN5dUB6LenGc1hwexr5mTVtDay3"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: "white" }}
+          style={{ color: "white", fontWeight: "bold" }}
         >
           see gork's coins
         </a>
