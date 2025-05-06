@@ -283,10 +283,10 @@ function GorkConversation() {
           telegram
         </a>
         <a
-          href="https://pump.fun/profile/7H1iGEeD5D5Gfn73fQa2cfkArp182uXXEYSkd4syDpp6"
+          href="https://pump.fun/profile/CXELdoJp4zAjBtg15HN5dUB6LenGc1hwexr5mTVtDay3"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ fontWeight: "bold" }}
+          style={{ color: "white" }}
         >
           see gork's coins
         </a>
