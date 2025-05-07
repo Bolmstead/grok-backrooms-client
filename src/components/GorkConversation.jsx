@@ -15,6 +15,12 @@ const TypewriterMessage = ({
   messageCreatedBy,
   timestamp,
 }) => {
+  console.log("TypewriterMessage rendered:", {
+    messageId,
+    isLatest,
+    messageCreatedBy,
+  });
+
   const [displayedText, setDisplayedText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
   const [isTyping, setIsTyping] = useState(true);
@@ -29,21 +35,30 @@ const TypewriterMessage = ({
   message = `${aiNameText} - ${messageId} - ${timestampText}
   
   ${message}`;
+
   // Store the complete message in a ref to avoid issues
   useEffect(() => {
+    console.log("Message content updated:", { messageId, content: message });
     contentRef.current = message;
   }, [message]);
 
   // Scroll to bottom when text updates during typing
   useEffect(() => {
     if (isLatest && conversationRef && conversationRef.current && isTyping) {
+      console.log("Scrolling to bottom during typing");
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
     }
   }, [displayedText, isLatest, conversationRef, isTyping]);
 
   useEffect(() => {
+    console.log("Starting typewriter effect:", {
+      messageId,
+      hasTyped: hasTypedRef.current,
+    });
+
     // If this message has already been typed out, just display it fully
     if (hasTypedRef.current) {
+      console.log("Message already typed, displaying full content");
       setDisplayedText(contentRef.current);
       setIsTyping(false);
       return;
@@ -53,7 +68,10 @@ const TypewriterMessage = ({
     setDisplayedText("");
     setIsTyping(true);
 
-    if (!contentRef.current) return;
+    if (!contentRef.current) {
+      console.log("No content to type");
+      return;
+    }
 
     let currentIndex = 0;
     const fullContent = contentRef.current;
@@ -70,17 +88,23 @@ const TypewriterMessage = ({
             conversationRef.current.scrollHeight;
         }
       } else {
+        console.log("Finished typing message:", messageId);
         clearInterval(typingInterval);
         setIsTyping(false);
         hasTypedRef.current = true; // Mark this message as fully typed
       }
     }, 10); // Adjust typing speed here
 
-    return () => clearInterval(typingInterval);
+    return () => {
+      console.log("Cleaning up typewriter effect:", messageId);
+      clearInterval(typingInterval);
+    };
   }, [timestamp, isLatest, conversationRef]);
 
   // Blinking cursor effect
   useEffect(() => {
+    console.log("Setting up cursor effect:", { messageId, isLatest });
+
     // Only apply blinking cursor for the latest message
     if (!isLatest) {
       setShowCursor(false);
@@ -91,7 +115,10 @@ const TypewriterMessage = ({
       setShowCursor((prev) => !prev);
     }, 500);
 
-    return () => clearInterval(cursorInterval);
+    return () => {
+      console.log("Cleaning up cursor effect:", messageId);
+      clearInterval(cursorInterval);
+    };
   }, [isLatest]);
 
   return (
@@ -113,6 +140,8 @@ const TypewriterMessage = ({
 };
 
 function GorkConversation() {
+  console.log("GorkConversation component rendered");
+
   const { id } = useParams();
   const [socket, setSocket] = useState(null);
   const [status, setStatus] = useState("");
@@ -122,21 +151,28 @@ function GorkConversation() {
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
+    console.log("Initializing socket connection");
+
     // Initialize socket connection
     const socketInstance = io(LIVE_BACKROOMS_URL);
     setSocket(socketInstance);
 
     // Set up socket event listeners
     socketInstance.on("connect", () => {
+      console.log("Socket connected");
       setStatus("Connected to server");
     });
 
     socketInstance.on("disconnect", () => {
+      console.log("Socket disconnected");
       setStatus("Disconnected from server. Please refresh the page.");
     });
 
     socketInstance.on("newMessage", (data) => {
+      console.log("Received new message:", data);
+
       if (isHidden) {
+        console.log("Tab is hidden, ignoring message");
         return;
       }
 
@@ -145,6 +181,7 @@ function GorkConversation() {
       // Scroll to bottom when new message arrives
       if (conversationRef.current) {
         setTimeout(() => {
+          console.log("Scrolling to bottom for new message");
           conversationRef.current.scrollTop =
             conversationRef.current.scrollHeight;
         }, 100);
@@ -152,16 +189,21 @@ function GorkConversation() {
     });
 
     socketInstance.on("conversationError", (data) => {
+      console.error("Conversation error:", data);
       setStatus(`Error: ${data.error}`);
     });
 
     // Handle visibility change
     const handleVisibilityChange = () => {
+      console.log("Visibility changed:", { hidden: document.hidden });
+
       if (document.hidden) {
         // Tab is hidden, reset messages
+        console.log("Tab hidden, resetting conversation");
         setConversation([]);
         setIsHidden(true);
       } else {
+        console.log("Tab visible again");
         setIsHidden(false);
       }
     };
@@ -170,6 +212,7 @@ function GorkConversation() {
 
     // Clean up on unmount
     return () => {
+      console.log("Cleaning up socket connection and event listeners");
       socketInstance.disconnect();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
