@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import "../styles/GorkConversation.css";
 import { LIVE_BACKROOMS_URL } from "../constants";
+console.log("🚀 ~ LIVE_BACKROOMS_URL:", LIVE_BACKROOMS_URL);
 
 // Typewriter component for animated text display
 const TypewriterMessage = ({
