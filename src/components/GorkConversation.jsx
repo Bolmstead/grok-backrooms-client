@@ -4,7 +4,6 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import "../styles/GorkConversation.css";
 import { LIVE_BACKROOMS_URL } from "../constants";
-console.log("🚀 ~ LIVE_BACKROOMS_URL:", LIVE_BACKROOMS_URL);
 
 // Typewriter component for animated text display
 const TypewriterMessage = ({
@@ -16,12 +15,6 @@ const TypewriterMessage = ({
   messageCreatedBy,
   timestamp,
 }) => {
-  console.log("TypewriterMessage rendered:", {
-    messageId,
-    isLatest,
-    messageCreatedBy,
-  });
-
   const [displayedText, setDisplayedText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
   const [isTyping, setIsTyping] = useState(true);
@@ -39,27 +32,19 @@ const TypewriterMessage = ({
 
   // Store the complete message in a ref to avoid issues
   useEffect(() => {
-    console.log("Message content updated:", { messageId, content: message });
     contentRef.current = message;
   }, [message]);
 
   // Scroll to bottom when text updates during typing
   useEffect(() => {
     if (isLatest && conversationRef && conversationRef.current && isTyping) {
-      console.log("Scrolling to bottom during typing");
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
     }
   }, [displayedText, isLatest, conversationRef, isTyping]);
 
   useEffect(() => {
-    console.log("Starting typewriter effect:", {
-      messageId,
-      hasTyped: hasTypedRef.current,
-    });
-
     // If this message has already been typed out, just display it fully
     if (hasTypedRef.current) {
-      console.log("Message already typed, displaying full content");
       setDisplayedText(contentRef.current);
       setIsTyping(false);
       return;
@@ -68,11 +53,6 @@ const TypewriterMessage = ({
     // Reset for new messages
     setDisplayedText("");
     setIsTyping(true);
-
-    if (!contentRef.current) {
-      console.log("No content to type");
-      return;
-    }
 
     let currentIndex = 0;
     const fullContent = contentRef.current;
@@ -89,7 +69,6 @@ const TypewriterMessage = ({
             conversationRef.current.scrollHeight;
         }
       } else {
-        console.log("Finished typing message:", messageId);
         clearInterval(typingInterval);
         setIsTyping(false);
         hasTypedRef.current = true; // Mark this message as fully typed
@@ -97,15 +76,12 @@ const TypewriterMessage = ({
     }, 10); // Adjust typing speed here
 
     return () => {
-      console.log("Cleaning up typewriter effect:", messageId);
       clearInterval(typingInterval);
     };
   }, [timestamp, isLatest, conversationRef]);
 
   // Blinking cursor effect
   useEffect(() => {
-    console.log("Setting up cursor effect:", { messageId, isLatest });
-
     // Only apply blinking cursor for the latest message
     if (!isLatest) {
       setShowCursor(false);
@@ -117,7 +93,6 @@ const TypewriterMessage = ({
     }, 500);
 
     return () => {
-      console.log("Cleaning up cursor effect:", messageId);
       clearInterval(cursorInterval);
     };
   }, [isLatest]);
@@ -152,28 +127,21 @@ function GorkConversation() {
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    console.log("Initializing socket connection");
-
     // Initialize socket connection
     const socketInstance = io(LIVE_BACKROOMS_URL);
     setSocket(socketInstance);
 
     // Set up socket event listeners
     socketInstance.on("connect", () => {
-      console.log("Socket connected");
       setStatus("Connected to server");
     });
 
     socketInstance.on("disconnect", () => {
-      console.log("Socket disconnected");
       setStatus("Disconnected from server. Please refresh the page.");
     });
 
     socketInstance.on("newMessage", (data) => {
-      console.log("Received new message:", data);
-
       if (isHidden) {
-        console.log("Tab is hidden, ignoring message");
         return;
       }
 
@@ -182,7 +150,6 @@ function GorkConversation() {
       // Scroll to bottom when new message arrives
       if (conversationRef.current) {
         setTimeout(() => {
-          console.log("Scrolling to bottom for new message");
           conversationRef.current.scrollTop =
             conversationRef.current.scrollHeight;
         }, 100);
@@ -196,15 +163,11 @@ function GorkConversation() {
 
     // Handle visibility change
     const handleVisibilityChange = () => {
-      console.log("Visibility changed:", { hidden: document.hidden });
-
       if (document.hidden) {
         // Tab is hidden, reset messages
-        console.log("Tab hidden, resetting conversation");
         setConversation([]);
         setIsHidden(true);
       } else {
-        console.log("Tab visible again");
         setIsHidden(false);
       }
     };
@@ -213,7 +176,6 @@ function GorkConversation() {
 
     // Clean up on unmount
     return () => {
-      console.log("Cleaning up socket connection and event listeners");
       socketInstance.disconnect();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
