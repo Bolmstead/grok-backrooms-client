@@ -274,7 +274,7 @@ function GorkConversation() {
         >
           pumpfun
         </a>
-        <a
+        {/* <a
           href="https://t.me/+WahMdi-cgTI2YTcx"
           target="_blank"
           rel="noopener noreferrer"
@@ -289,7 +289,7 @@ function GorkConversation() {
           style={{ color: "white", fontWeight: "bold" }}
         >
           see gork's coins
-        </a>
+        </a> */}
       </div>
     </div>
   );
